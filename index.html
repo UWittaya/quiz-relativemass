@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>แบบทดสอบเคมี: มวลอะตอมและมวลโมเลกุล</title>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#e0f2fe;--bg2:#ede9fe;--card:#fff;--ink:#1e293b;--mute:#64748b;--pri:#4f46e5;--pri2:#0ea5e9;--line:#e2e8f0;--sel:#eef2ff}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{font-family:'Prompt','Sarabun','Noto Sans Thai',Tahoma,sans-serif;color:var(--ink);background:linear-gradient(135deg,var(--bg1),var(--bg2)) fixed;display:flex;justify-content:center;align-items:flex-start;padding:max(16px,env(safe-area-inset-top)) 16px 32px;line-height:1.6}
+.wrap{width:100%;max-width:720px;margin-top:4vh}
+.card{background:var(--card);border-radius:24px;padding:clamp(20px,4vw,36px);box-shadow:0 20px 50px -20px rgba(79,70,229,.35)}
+.hidden{display:none!important}
+.logo{width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,var(--pri),var(--pri2));display:grid;place-items:center;font-size:34px;color:#fff;margin:0 auto 16px}
+h1{font-size:clamp(1.4rem,4vw,1.8rem);margin:0 0 6px;text-align:center}
+.sub{color:var(--mute);text-align:center;margin:0 0 24px}
+label{font-weight:500;display:block;margin-bottom:6px}
+input[type=text]{width:100%;padding:14px 16px;font:inherit;border:2px solid var(--line);border-radius:14px;outline:none;transition:.2s}
+input[type=text]:focus{border-color:var(--pri);box-shadow:0 0 0 4px rgba(79,70,229,.12)}
+.info{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 20px;padding:0;list-style:none}
+.info li{background:var(--sel);color:var(--pri);border-radius:999px;padding:4px 14px;font-size:.88rem}
+.btn{font:inherit;font-weight:500;border:0;border-radius:14px;padding:13px 24px;cursor:pointer;transition:.2s;background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;width:100%;font-size:1.05rem}
+.btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 8px 20px -8px var(--pri)}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--ink);border:2px solid var(--line)}
+.top{display:flex;justify-content:space-between;align-items:center;font-size:.9rem;color:var(--mute);margin-bottom:10px;gap:10px}
+.top b{color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar{height:8px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:22px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width .3s}
+.qno{color:var(--pri);font-weight:600;margin-bottom:4px}
+.q{font-size:clamp(1.05rem,3vw,1.25rem);font-weight:500;margin:0 0 18px}
+.opts{display:grid;gap:10px}
+.opt{display:flex;align-items:center;gap:12px;padding:13px 14px;border:2px solid var(--line);border-radius:14px;cursor:pointer;transition:.15s;font-size:1.02rem;user-select:none}
+.opt:hover{border-color:#a5b4fc}
+.opt.on{border-color:var(--pri);background:var(--sel)}
+.opt .k{flex:none;width:34px;height:34px;border-radius:50%;background:var(--line);display:grid;place-items:center;font-weight:600;font-size:.95rem}
+.opt.on .k{background:var(--pri);color:#fff}
+.nav{display:flex;gap:10px;margin-top:24px}
+.nav .btn{flex:1}
+.dots{display:flex;gap:8px;justify-content:center;margin-top:18px}
+.dots span{width:10px;height:10px;border-radius:50%;background:var(--line)}
+.dots span.done{background:#a5b4fc}.dots span.cur{background:var(--pri);transform:scale(1.3)}
+.res{text-align:center}
+.score{font-size:clamp(2.6rem,10vw,4rem);font-weight:600;background:linear-gradient(135deg,var(--pri),var(--pri2));-webkit-background-clip:text;background-clip:text;color:transparent;margin:6px 0}
+.msg{font-size:clamp(1.1rem,3.5vw,1.35rem);margin:0 0 8px}
+.emoji{font-size:56px}
+sup,sub{line-height:0}
+@media (max-width:480px){.nav{flex-direction:column-reverse}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- Login -->
+  <section id="s-login" class="card">
+    <div class="logo">⚗️</div>
+    <h1>แบบทดสอบวิชาเคมี</h1>
+    <p class="sub">เรื่อง มวลอะตอมและมวลโมเลกุล</p>
+    <ul class="info"><li>4 ข้อ</li><li>ข้อละ 0.5 คะแนน</li><li>เต็ม 2 คะแนน</li></ul>
+    <label for="name">ชื่อ-นามสกุล</label>
+    <input type="text" id="name" placeholder="กรอกชื่อ-นามสกุลของคุณ" autocomplete="name" maxlength="80">
+    <div style="height:18px"></div>
+    <button class="btn" id="start" disabled>เริ่มทำแบบทดสอบ</button>
+  </section>
+
+  <!-- Quiz -->
+  <section id="s-quiz" class="card hidden">
+    <div class="top"><b id="who"></b><span id="prog"></span></div>
+    <div class="bar"><i id="barfill"></i></div>
+    <div class="qno" id="qno"></div>
+    <p class="q" id="qtext"></p>
+    <div class="opts" id="opts"></div>
+    <div class="nav">
+      <button class="btn ghost" id="prev">← ก่อนหน้า</button>
+      <button class="btn" id="next">ถัดไป →</button>
+      <button class="btn" id="submit">ส่งคำตอบ</button>
+    </div>
+    <div class="dots" id="dots"></div>
+  </section>
+
+  <!-- Result -->
+  <section id="s-result" class="card res hidden">
+    <div class="emoji">🎉</div>
+    <p class="msg">ยินดีด้วย คุณ <b id="rname"></b></p>
+    <p class="msg">ได้</p>
+    <div class="score"><span id="rscore"></span> / 2.0</div>
+    <p class="sub">คะแนน</p>
+    <button class="btn" id="retry">ทำแบบทดสอบใหม่อีกครั้ง</button>
+  </section>
+
+</div>
+
+<script>
+/* ---------- คลังข้อสอบ 20 ข้อ (a = ดัชนีคำตอบที่ถูก 0=ก ... 4=จ) ---------- */
+const U = '1.66 × 10<sup>−24</sup> g';
+const N = (m, a, b) => `${m} × ${U}`;           // helper: "m × 1.66 × 10^-24 g"
+const BANK = [
+ // กลุ่ม 1: ข้อ 1-4
+ {q:'อะตอม <sup>16</sup>O จำนวน 4 อะตอม มีมวล 64 × '+U+' จงหามวลอะตอมของ <sup>16</sup>O', o:['16','32','48','64','128'], a:0},
+ {q:'อะตอม <sup>27</sup>Al จำนวน 3 อะตอม มีมวล 81 × '+U+' จงหามวลอะตอมของ <sup>27</sup>Al', o:['9','18','27','54','81'], a:2},
+ {q:'อะตอม <sup>24</sup>Mg จำนวน 5 อะตอม มีมวล 120 × '+U+' จงหามวลอะตอมของ <sup>24</sup>Mg', o:['12','24','36','48','60'], a:1},
+ {q:'อะตอม <sup>40</sup>Ca จำนวน 2 อะตอม มีมวล 80 × '+U+' จงหามวลอะตอมของ <sup>40</sup>Ca', o:['20','40','60','80','160'], a:1},
+ // กลุ่ม 2: ข้อ 5-8
+ {q:'อะตอม N มีมวลอะตอมเท่ากับ 14 จงหาว่าอะตอม N จำนวน 3.01 × 10<sup>23</sup> อะตอม หนักกี่กรัม', o:['3.5 g','7.0 g','4.0 g','1.0 g','28.0 g'], a:1},
+ {q:'อะตอม S มีมวลอะตอมเท่ากับ 32 จงหาว่าอะตอม S จำนวน 1.204 × 10<sup>24</sup> อะตอม หนักกี่กรัม', o:['16 g','32 g','48 g','64 g','128 g'], a:3},
+ {q:'อะตอม He มีมวลอะตอมเท่ากับ 4 จงหาว่าอะตอม He จำนวน 6.02 × 10<sup>23</sup> อะตอม หนักกี่กรัม', o:['1 g','2 g','4 g','8 g','12 g'], a:2},
+ {q:'อะตอม Na มีมวลอะตอมเท่ากับ 23 จงหาว่าอะตอม Na จำนวน 1.806 × 10<sup>24</sup> อะตอม หนักกี่กรัม', o:['23 g','46 g','69 g','92 g','115 g'], a:2},
+ // กลุ่ม 3: ข้อ 9-12
+ {q:'ก๊าซออกซิเจน (O<sub>2</sub>) 3 โมเลกุล มีมวลเท่ากับ 96 × '+U+' จงหามวลโมเลกุลของก๊าซออกซิเจน', o:['16','32','48','64','96'], a:1},
+ {q:'ก๊าซคาร์บอนไดออกไซด์ (CO<sub>2</sub>) 5 โมเลกุล มีมวลเท่ากับ 220 × '+U+' จงหามวลโมเลกุลของ CO<sub>2</sub>', o:['22','44','88','110','220'], a:1},
+ {q:'แอมโมเนีย (NH<sub>3</sub>) 4 โมเลกุล มีมวลเท่ากับ 68 × '+U+' จงหามวลโมเลกุลของ NH<sub>3</sub>', o:['17','34','51','68','136'], a:0},
+ {q:'ไดไนโตรเจนเพนทอกไซด์ (N<sub>2</sub>O<sub>5</sub>) 2 โมเลกุล มีมวลเท่ากับ 216 × '+U+' จงหามวลโมเลกุลของ N<sub>2</sub>O<sub>5</sub>', o:['54','108','162','216','432'], a:1},
+ // กลุ่ม 4: ข้อ 13-20
+ {q:'กรดแอซีติก (CH<sub>3</sub>COOH) มีมวลโมเลกุลเท่ากับ 60 จงหาว่า CH<sub>3</sub>COOH จำนวน 1 โมเลกุล มีมวลกี่กรัม',
+  o:['60 × '+U,'30 × '+U,'9.96 × '+U,'120 × '+U,'1.66 × 10<sup>−24</sup> g'], a:0},
+ {q:'ก๊าซคลอรีน (Cl<sub>2</sub>) มีมวลโมเลกุลเท่ากับ 71 จงหาว่าก๊าซคลอรีน 1 โมเลกุล มีมวลกี่กรัม',
+  o:['35.5 × '+U,'71 × '+U,'142 × '+U,'71 × 6.02 × 10<sup>23</sup> g','1.66 × 10<sup>−24</sup> g'], a:1},
+ {q:'เอทานอล (C<sub>2</sub>H<sub>5</sub>OH) มีมวลโมเลกุลเท่ากับ 46 จงหาว่าเอทานอล 1 โมเลกุล มีมวลกี่กรัม',
+  o:['23 × '+U,'46 × '+U,'92 × '+U,'46 × 6.02 × 10<sup>23</sup> g','1.66 × 10<sup>−24</sup> g'], a:1},
+ {q:'กรดซัลฟิวริก (H<sub>2</sub>SO<sub>4</sub>) มีมวลโมเลกุลเท่ากับ 98 จงหาว่ากรดซัลฟิวริก 1 โมเลกุล มีมวลกี่กรัม',
+  o:['49 × '+U,'98 × '+U,'196 × '+U,'98 × 6.02 × 10<sup>23</sup> g','9.8 × 10<sup>−23</sup> g'], a:1},
+ {q:'น้ำ (H<sub>2</sub>O) มีมวลโมเลกุลเท่ากับ 18 จงหาว่าสารนี้จำนวน 3.01 × 10<sup>23</sup> โมเลกุล หนักกี่กรัม', o:['4.5 g','9.0 g','18.0 g','36.0 g','54.0 g'], a:1},
+ {q:'สารชนิดหนึ่ง มีมวลโมเลกุลเท่ากับ 44 จงหาว่าสารนี้จำนวน 1.505 × 10<sup>23</sup> โมเลกุล หนักกี่กรัม', o:['11 g','22 g','44 g','88 g','110 g'], a:0},
+ {q:'กลูโคส (C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>) มีมวลโมเลกุลเท่ากับ 180 จงหาว่าสารนี้จำนวน 6.02 × 10<sup>22</sup> โมเลกุล หนักกี่กรัม', o:['9.0 g','18.0 g','36.0 g','90.0 g','180.0 g'], a:1},
+ {q:'ซูโครส (C<sub>12</sub>H<sub>22</sub>O<sub>11</sub>) มีมวลโมเลกุลเท่ากับ 342 จงหาว่าสารนี้จำนวน 1.204 × 10<sup>23</sup> โมเลกุล หนักกี่กรัม', o:['34.2 g','68.4 g','171.0 g','342.0 g','684.0 g'], a:1}
+];
+// ช่วงข้อ (ดัชนีเริ่มที่ 0, end ไม่รวม): 1-4, 5-8, 9-12, 13-20
+const GROUPS = [[0,4],[4,8],[8,12],[12,20]];
+const LETTERS = ['ก','ข','ค','ง','จ'];
+const PER_Q = 0.5;
+
+const $ = id => document.getElementById(id);
+let paper = [], answers = [], cur = 0, student = '';
+
+const pick = ([s,e]) => BANK[s + Math.floor(Math.random()*(e-s))];
+
+function show(id){
+  ['s-login','s-quiz','s-result'].forEach(x => $(x).classList.toggle('hidden', x!==id));
+  window.scrollTo({top:0});
+}
+
+function newPaper(){            // สุ่มกลุ่มละ 1 ข้อ รวม 4 ข้อ
+  paper = GROUPS.map(pick);
+  answers = Array(paper.length).fill(null);
+  cur = 0;
+}
+
+function render(){
+  const q = paper[cur], last = cur === paper.length-1;
+  $('who').textContent = student;
+  $('prog').textContent = `ข้อ ${cur+1} / ${paper.length}`;
+  $('barfill').style.width = ((cur+1)/paper.length*100) + '%';
+  $('qno').textContent = `ข้อที่ ${cur+1}`;
+  $('qtext').innerHTML = q.q;
+  $('opts').innerHTML = q.o.map((t,i) =>
+    `<div class="opt ${answers[cur]===i?'on':''}" data-i="${i}" role="radio" aria-checked="${answers[cur]===i}" tabindex="0"><span class="k">${LETTERS[i]}</span><span>${t}</span></div>`).join('');
+  $('prev').style.visibility = cur===0 ? 'hidden' : 'visible';
+  $('next').classList.toggle('hidden', last);
+  $('submit').classList.toggle('hidden', !last);
+  $('next').disabled = answers[cur]===null;
+  $('submit').disabled = answers.some(a => a===null);
+  $('dots').innerHTML = paper.map((_,i) => `<span class="${i===cur?'cur':answers[i]!==null?'done':''}"></span>`).join('');
+}
+
+function choose(i){ answers[cur] = i; render(); }
+
+$('name').addEventListener('input', e => { $('start').disabled = !e.target.value.trim(); });
+$('name').addEventListener('keydown', e => { if(e.key==='Enter' && !$('start').disabled) $('start').click(); });
+
+$('start').addEventListener('click', () => {
+  student = $('name').value.trim();
+  if(!student) return;
+  newPaper(); show('s-quiz'); render();
+});
+
+$('opts').addEventListener('click', e => {
+  const o = e.target.closest('.opt'); if(o) choose(+o.dataset.i);
+});
+$('opts').addEventListener('keydown', e => {
+  const o = e.target.closest('.opt');
+  if(o && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); choose(+o.dataset.i); }
+});
+$('prev').addEventListener('click', () => { if(cur>0){ cur--; render(); } });
+$('next').addEventListener('click', () => { if(cur<paper.length-1 && answers[cur]!==null){ cur++; render(); } });
+
+$('submit').addEventListener('click', () => {
+  if(answers.some(a => a===null)) return;
+  const correct = paper.reduce((n,q,i) => n + (answers[i]===q.a ? 1 : 0), 0);
+  $('rname').textContent = student;
+  $('rscore').textContent = (correct*PER_Q).toFixed(1);
+  show('s-result');
+});
+
+$('retry').addEventListener('click', () => {
+  newPaper(); show('s-quiz'); render();   // ใช้ชื่อเดิม สุ่มชุดใหม่
+});
+
+// สุ่มชุดข้อสอบเตรียมไว้ทุกครั้งที่เปิด/รีเฟรชหน้า
+newPaper();
+</script>
+</body>
+</html>
